@@ -18,7 +18,7 @@ dependencies {
 jmh {
     warmupIterations.set(3)
     iterations.set(3)
-    fork.set(1)
+    fork.set(2)
     failOnError.set(true)
 }
 
