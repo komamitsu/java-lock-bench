@@ -1,11 +1,11 @@
-package org.komamitsu.bench.simple;
+package org.komamitsu.bench.counter;
 
 import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.komamitsu.bench.simple.Constants.NUM_OF_OPS_PER_THREAD;
-import static org.komamitsu.bench.simple.Constants.NUM_OF_THREADS;
+import static org.komamitsu.bench.counter.Constants.NUM_OF_OPS_PER_THREAD;
+import static org.komamitsu.bench.counter.Constants.NUM_OF_THREADS;
 
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
