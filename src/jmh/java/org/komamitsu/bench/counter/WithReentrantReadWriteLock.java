@@ -31,7 +31,7 @@ public class WithReentrantReadWriteLock {
             counter++;
         }
         finally {
-            lock.writeLock().lock();
+            lock.writeLock().unlock();
         }
     }
 
