@@ -32,9 +32,9 @@ public class WithConcurrentHashMap {
         }
     }
 
-    private void read() {
+    private Long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
-        map.get(key);
+        return map.get(key);
     }
 
     @Benchmark

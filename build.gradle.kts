@@ -28,7 +28,7 @@ subprojects {
     jmh {
         warmupIterations.set(3)
         iterations.set(3)
-        fork.set(2)
+        fork.set(1)
         failOnError.set(true)
     }
 

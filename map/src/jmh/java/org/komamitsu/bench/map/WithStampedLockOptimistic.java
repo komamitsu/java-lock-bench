@@ -9,12 +9,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.StampedLock;
 
-import static org.komamitsu.bench.Constants.*;
-import static org.komamitsu.bench.map.Constants.*;
+import static org.komamitsu.bench.Constants.NUM_OF_OPS_PER_THREAD;
+import static org.komamitsu.bench.Constants.NUM_OF_THREADS;
+import static org.komamitsu.bench.map.Constants.NUM_OF_MAP_KEYS;
+import static org.komamitsu.bench.map.Constants.NUM_WRITE_OP_OCCUR_WHEN_RANDOM_NUM_IS_MULTIPLE_OF;
 
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class WithStampedLock {
+public class WithStampedLockOptimistic {
     private final Random random = new Random();
     private final Map<Integer, Long> map = new HashMap<>();
     private final StampedLock lock = new StampedLock();
@@ -38,7 +40,12 @@ public class WithStampedLock {
 
     private Long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
-        // StampedLock's read lock is too slow...
+        long stampForOptimisticRead = lock.tryOptimisticRead();
+        Long value = map.get(key);
+        if (lock.validate(stampForOptimisticRead)) {
+            return value;
+        }
+
         long stamp = lock.writeLock();
         try {
             return map.get(key);
