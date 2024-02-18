@@ -20,8 +20,12 @@ jobs:
       with:
         distribution: temurin
         java-version: ${{ matrix.java_version }}
-    - name: Setup and execute Gradle 'jmh' task
+    - name: Setup and execute Gradle 'counter:jmh' task
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: jmh
+        arguments: counter:jmh
+    - name: Setup and execute Gradle 'map:jmh' task
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: map:jmh
 
