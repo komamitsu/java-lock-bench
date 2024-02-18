@@ -2,15 +2,16 @@ package org.komamitsu.bench.counter;
 
 import org.openjdk.jmh.annotations.*;
 
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.StampedLock;
 
-import static org.komamitsu.bench.counter.Constants.NUM_OF_OPS_PER_THREAD;
-import static org.komamitsu.bench.counter.Constants.NUM_OF_THREADS;
+import static org.komamitsu.bench.Constants.*;
 
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class WithSynchronized {
-    private long counter;
+public class WithStampedLock {
+    private volatile long counter;
+    private final StampedLock lock = new StampedLock();
 
     @Setup(Level.Iteration)
     public void setup() {
@@ -22,8 +23,14 @@ public class WithSynchronized {
         System.out.println("counter: " + counter);
     }
 
-    private synchronized void increment() {
-        counter++;
+    private void increment() {
+        long stamp = lock.writeLock();
+        try {
+            counter++;
+        }
+        finally {
+            lock.unlock(stamp);
+        }
     }
 
     @Benchmark

@@ -4,16 +4,14 @@ import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static org.komamitsu.bench.counter.Constants.NUM_OF_OPS_PER_THREAD;
-import static org.komamitsu.bench.counter.Constants.NUM_OF_THREADS;
+import static org.komamitsu.bench.Constants.*;
 
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class WithReentrantReadWriteLock {
+public class WithReentrantLock {
     private volatile long counter;
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private final ReentrantLock lock = new ReentrantLock();
 
     @Setup(Level.Iteration)
     public void setup() {
@@ -26,12 +24,12 @@ public class WithReentrantReadWriteLock {
     }
 
     private void increment() {
-        lock.writeLock().lock();
+        lock.lock();
         try {
             counter++;
         }
         finally {
-            lock.writeLock().unlock();
+            lock.unlock();
         }
     }
 

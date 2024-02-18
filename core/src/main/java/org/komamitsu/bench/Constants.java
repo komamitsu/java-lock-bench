@@ -1,4 +1,4 @@
-package org.komamitsu.bench.counter;
+package org.komamitsu.bench;
 
 public final class Constants {
     public static final int NUM_OF_THREADS = 500;
