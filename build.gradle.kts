@@ -1,27 +1,38 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 plugins {
     id("java")
     id("me.champeau.jmh") version "0.7.2"
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+subprojects {
+    group = "org.example"
+    version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
+    apply(plugin = "java")
+    apply(plugin = "me.champeau.jmh")
 
-dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-}
+    repositories {
+        mavenCentral()
+    }
 
-jmh {
-    warmupIterations.set(3)
-    iterations.set(3)
-    fork.set(2)
-    failOnError.set(true)
-}
+    dependencies {
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    }
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
+    jmh {
+        warmupIterations.set(3)
+        iterations.set(3)
+        fork.set(2)
+        failOnError.set(true)
+    }
+
+    tasks.getByName<Test>("test") {
+        useJUnitPlatform()
+    }
 }

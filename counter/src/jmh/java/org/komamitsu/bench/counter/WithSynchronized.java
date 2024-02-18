@@ -2,17 +2,14 @@ package org.komamitsu.bench.counter;
 
 import org.openjdk.jmh.annotations.*;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.*;
 
-import static org.komamitsu.bench.counter.Constants.NUM_OF_OPS_PER_THREAD;
-import static org.komamitsu.bench.counter.Constants.NUM_OF_THREADS;
+import static org.komamitsu.bench.Constants.*;
 
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class WithReentrantLock {
-    private volatile long counter;
-    private final ReentrantLock lock = new ReentrantLock();
+public class WithSynchronized {
+    private long counter;
 
     @Setup(Level.Iteration)
     public void setup() {
@@ -24,14 +21,8 @@ public class WithReentrantLock {
         System.out.println("counter: " + counter);
     }
 
-    private void increment() {
-        lock.lock();
-        try {
-            counter++;
-        }
-        finally {
-            lock.unlock();
-        }
+    private synchronized void increment() {
+        counter++;
     }
 
     @Benchmark
