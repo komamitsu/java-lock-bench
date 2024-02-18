@@ -32,18 +32,19 @@ public class WithStampedLock {
             map.put(key, value + 1);
         }
         finally {
-            lock.unlock(stamp);
+            lock.unlockWrite(stamp);
         }
     }
 
-    private long read() {
+    private Long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
-        long stamp = lock.readLock();
+        // StampedLock's read lock is too slow...
+        long stamp = lock.writeLock();
         try {
             return map.get(key);
         }
         finally {
-            lock.unlock(stamp);
+            lock.unlockWrite(stamp);
         }
     }
 

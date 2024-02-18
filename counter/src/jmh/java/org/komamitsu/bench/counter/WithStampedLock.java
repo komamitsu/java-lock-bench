@@ -29,7 +29,7 @@ public class WithStampedLock {
             counter++;
         }
         finally {
-            lock.unlock(stamp);
+            lock.unlockWrite(stamp);
         }
     }
 

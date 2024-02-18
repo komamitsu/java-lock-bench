@@ -28,7 +28,7 @@ public class WithSynchronized {
         map.put(key, value + 1);
     }
 
-    private synchronized long read() {
+    private synchronized Long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
         return map.get(key);
     }

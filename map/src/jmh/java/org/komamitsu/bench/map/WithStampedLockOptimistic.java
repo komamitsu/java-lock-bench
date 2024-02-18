@@ -34,24 +34,24 @@ public class WithStampedLockOptimistic {
             map.put(key, value + 1);
         }
         finally {
-            lock.unlock(stamp);
+            lock.unlockWrite(stamp);
         }
     }
 
-    private long read() {
+    private Long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
         long stampForOptimisticRead = lock.tryOptimisticRead();
-        long value = map.get(key);
+        Long value = map.get(key);
         if (lock.validate(stampForOptimisticRead)) {
             return value;
         }
 
-        long stamp = lock.readLock();
+        long stamp = lock.writeLock();
         try {
             return map.get(key);
         }
         finally {
-            lock.unlock(stamp);
+            lock.unlockWrite(stamp);
         }
     }
 
