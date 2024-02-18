@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.StampedLock;
 
 import static org.komamitsu.bench.Constants.*;
 import static org.komamitsu.bench.map.Constants.*;
@@ -16,7 +17,7 @@ import static org.komamitsu.bench.map.Constants.*;
 public class WithStampedLock {
     private final Random random = new Random();
     private final Map<Integer, Long> map = new HashMap<>();
-    private final ReentrantLock lock = new ReentrantLock();
+    private final StampedLock lock = new StampedLock();
 
     @TearDown(Level.Iteration)
     public void tearDown() {
@@ -25,24 +26,24 @@ public class WithStampedLock {
 
     private void increment() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
-        lock.lock();
+        long stamp = lock.writeLock();
         try {
             Long value = map.computeIfAbsent(key, k -> 0L);
             map.put(key, value + 1);
         }
         finally {
-            lock.unlock();
+            lock.unlock(stamp);
         }
     }
 
-    private void read() {
+    private long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
-        lock.lock();
+        long stamp = lock.readLock();
         try {
-            map.get(key);
+            return map.get(key);
         }
         finally {
-            lock.unlock();
+            lock.unlock(stamp);
         }
     }
 

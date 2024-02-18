@@ -35,11 +35,11 @@ public class WithReentrantReadWriteLock {
         }
     }
 
-    private void read() {
+    private long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
         lock.readLock().lock();
         try {
-            map.get(key);
+            return map.get(key);
         }
         finally {
             lock.readLock().unlock();

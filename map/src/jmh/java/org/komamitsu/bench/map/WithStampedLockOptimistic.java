@@ -2,10 +2,12 @@ package org.komamitsu.bench.map;
 
 import org.openjdk.jmh.annotations.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.StampedLock;
 
 import static org.komamitsu.bench.Constants.NUM_OF_OPS_PER_THREAD;
 import static org.komamitsu.bench.Constants.NUM_OF_THREADS;
@@ -14,9 +16,11 @@ import static org.komamitsu.bench.map.Constants.NUM_WRITE_OP_OCCUR_WHEN_RANDOM_N
 
 @State(Scope.Benchmark)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class WithConcurrentHashMap {
+public class WithStampedLockOptimistic {
     private final Random random = new Random();
-    private final ConcurrentMap<Integer, Long> map = new ConcurrentHashMap<>();
+    private final Map<Integer, Long> map = new HashMap<>();
+    private final StampedLock lock = new StampedLock();
+
     @TearDown(Level.Iteration)
     public void tearDown() {
         System.out.println("map.size: " + map.size());
@@ -24,17 +28,31 @@ public class WithConcurrentHashMap {
 
     private void increment() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
-        while (true) {
-            long value = map.computeIfAbsent(key, k -> 0L);
-            if (map.replace(key, value, value + 1)) {
-                return;
-            }
+        long stamp = lock.writeLock();
+        try {
+            Long value = map.computeIfAbsent(key, k -> 0L);
+            map.put(key, value + 1);
+        }
+        finally {
+            lock.unlock(stamp);
         }
     }
 
     private long read() {
         int key = random.nextInt(NUM_OF_MAP_KEYS);
-        return map.get(key);
+        long stampForOptimisticRead = lock.tryOptimisticRead();
+        long value = map.get(key);
+        if (lock.validate(stampForOptimisticRead)) {
+            return value;
+        }
+
+        long stamp = lock.readLock();
+        try {
+            return map.get(key);
+        }
+        finally {
+            lock.unlock(stamp);
+        }
     }
 
     @Benchmark
