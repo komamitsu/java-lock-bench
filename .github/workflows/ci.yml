@@ -27,7 +27,7 @@ jobs:
     - name: Upload the result of 'counter:jmh' task
       uses: actions/upload-artifact@v4
       with:
-        name: counter-result-csv
+        name: java-${{ matrix.java_version }}-counter-result-csv
         path: counter/build/results/jmh/results.csv
     - name: Setup and execute Gradle 'map:jmh' task
       uses: gradle/gradle-build-action@v2
@@ -36,7 +36,7 @@ jobs:
     - name: Upload the result of 'map:jmh' task
       uses: actions/upload-artifact@v4
       with:
-        name: map-result-csv
+        name: java-${{ matrix.java_version }}-map-result-csv
         path: map/build/results/jmh/results.csv
 
 
