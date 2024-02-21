@@ -30,6 +30,7 @@ subprojects {
         iterations.set(3)
         fork.set(1)
         failOnError.set(true)
+        resultFormat.set("CSV")
     }
 
     tasks.getByName<Test>("test") {
