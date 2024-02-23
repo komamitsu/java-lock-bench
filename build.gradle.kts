@@ -26,9 +26,9 @@ subprojects {
     }
 
     jmh {
-        warmupIterations.set(3)
-        iterations.set(3)
-        fork.set(1)
+        warmupIterations.set(4)
+        iterations.set(4)
+        fork.set(2)
         failOnError.set(true)
         resultFormat.set("CSV")
     }
