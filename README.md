@@ -29,12 +29,12 @@ The following types of benchmarks are included in the project.
 
 ## How to run the benchmark
 
-Execute this command to run the Counter benchmark
+Execute this command to run the Counter benchmarks
 ```shell
 ./gradlew counter:jmh
 ```
 
-Execute this command to run the Map benchmark
+Execute this command to run the Map benchmarks
 ```shell
 ./gradlew map:jmh
 ```
@@ -43,4 +43,13 @@ Execute this command to run all the benchmarks
 ```shell
 ./gradlew jmh
 ```
+
+## Benchmark results on Linux using Java 8, 11, 17 and 21
+
+For the Counter benchmarks
+![image](https://github.com/komamitsu/java-lock-bench/assets/59043/c70e4d8f-6294-4bf8-9d6b-a7952fe988d5)
+
+For the Map benchmarks
+![image](https://github.com/komamitsu/java-lock-bench/assets/59043/1218d12e-72de-4988-b02b-f3f6466969d8)
+
 
